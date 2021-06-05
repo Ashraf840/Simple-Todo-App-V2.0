@@ -1,0 +1,131 @@
+**************** Create a "Todo" App with Integrated API ****************
+
+
+******** Configure the Git & GitHub
+*** Fetch from another remote repo ("Simple-Todo-App") & push to another remote repo ("Simple-Todo-App-V2.0") in GitHub
+
+1. Redirect to the desired directory and open the terminal from that directory.
+
+2. Open terminal to clone the basic "Todo" app project (without API)
+	ls -l
+	git clone https://github.com/Ashraf840/Simple-Todo-App.git
+
+3. Check the status of git & git remote
+	git status
+	git remote -v
+(displaying git remotes)
+[output] 
+	origin  https://github.com/Ashraf840/Simple-Todo-App.git (fetch)
+	origin  https://github.com/Ashraf840/Simple-Todo-App.git (push)
+
+4. Create another repository for this project which is integrated with rest API endpoints.
+repo name: Simple-Todo-App-V2.0
+
+5. Create another REMOTE to push the local repo to the newly created remote GitHub repo (Simple-Todo-App-V2.0)
+	git remote add originV2 https://github.com/Ashraf840/Simple-Todo-App-V2.0.git
+
+6. Check the git remotes again.
+	git remote -v
+[output]
+	origin  	https://github.com/Ashraf840/Simple-Todo-App.git (fetch)
+	origin  	https://github.com/Ashraf840/Simple-Todo-App.git (push)
+	originV2        https://github.com/Ashraf840/Simple-Todo-App-V2.0.git (fetch)
+	originV2        https://github.com/Ashraf840/Simple-Todo-App-V2.0.git (push)
+
+
+******** Create APIs for the "todoapp" component
+
+7. Create "api" directory for API-endpoints inside the app-component "todoapp".
+  Redirect the terminal to the directory "Simple-Todo-App (User Auth)/todoapp"
+	mkdir api
+	cd todoapp/api
+	touch "__init__.py"
+
+8. Create a "note.md" file, written the basic APIs for this app component
+
+9. Create some rest_framework configuration inside the project's "settings.py" file.
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAdminUser',
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 5
+}
+
+10. Create "serializers.py" file inside the "todoapp/api/" directory.
+    It is used while creating API views. The model ("MyTodo") of the "todoapp" is being serialized here
+    Create a class "MyTodoSerializer" inside the "serializers.py" file.
+
+class MyTodoSerializer(serializers.ModelSerializer):
+    class Meta():
+        model = MyTodo
+        fields = ['id', 'task',]
+
+11. Create "views.py" file inside the "todoapp/api/" directory.
+    "api_view" is used to create different APIs for the "todoapp". It worked as a decorator over every methods/ views craeted later.
+    	"def apiOverview(request):" is created for displaying all the API endpoints
+    	"def taskList(request):" is created for displaying all the tasks
+    	"def taskDetail(request, pk):" is created for displaying a single particular task
+    	"def taskCreate(request):" is created for creating a task
+    	"def taskUpdate(request, pk):" is created for updating a single particular task
+    	"def taskDelete(request, pk):" is created for deleting a single particular task
+
+12. Along with "@api_view" as a decorator over every views, 
+    another decorator called "@authentication_classes([BasicAuthentication])" is used over every view except "def apiOverview(request):",
+    because it only shows all the available API endpoints for this "todoapp" component.
+
+13. After creating all the views for the APIs, create the corresponding URLs for those views.
+    Define a app name inside the "urls.py" file.
+app_name = 'todoApi'
+urlpatterns = [
+    path('', views.apiOverview, name='api_overview'),
+    path('task-list/', views.taskList, name='task_list'),
+    path('task-detail/<str:pk>/', views.taskDetail, name='task_detail'),
+    path('task-create/', views.taskCreate, name='task_create'),
+    path('task-update/<str:pk>/', views.taskUpdate, name='task_update'),
+    path('task-delete/<str:pk>/', views.taskDelete, name='task_delete'),
+]
+
+14. Include the "todoapp/api/urls.py" inside the base project's "urls.py" file.
+urlpatterns = [
+    .................,
+    path('api/todo/', include(('todoapp.api.urls', 'app_name'), namespace='todo_api')),
+]
+
+
+15. Test all the APIs using "Postman". Though started the Postman testing immediately after creating the "apiOverview(request)" view, join this view to the local "todoapp/api/urls.py", the include that to the base porject's "basic_crud_project/urls.py" file.
+
+
+******** Push the modifications to the GitHub repo ("") using Git
+
+16. Add the files to the local Git, the push that to the remote GitHub repo's ("Simple-Todo-App-V2.0") "dev" branch.
+	git status
+	git remote -v
+	git add .
+	git commit -m "Added project's information text file"
+	git push -u originV2
+
+17. In the GitHub online, merge the pushed commit to the "main" branch.
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
