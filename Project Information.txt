@@ -109,7 +109,7 @@ urlpatterns = [
 	git remote -v
 	git add .
 	git commit -m "Added project's information text file"
-	git push -u originV2 https://github.com/Ashraf840/Simple-Todo-App-V2.0.git
+	git push -u originV2
 
 17. In the GitHub online, merge the pushed commit to the "main" branch.
 	
